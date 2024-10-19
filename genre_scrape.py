@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import os
 
 def get_indie_games_urls(num_pages=1):
     base_url = "https://store.steampowered.com/saleaction/ajaxgetsaledynamicappquery"
@@ -56,10 +57,21 @@ def get_indie_games_urls(num_pages=1):
     return all_game_urls
 
 # Scrape 10 pages of indie games (adjust as needed)
-indie_game_urls = get_indie_games_urls(10)
+indie_game_urls = get_indie_games_urls(1)
 
+# Get current time and format it as hours_minutes_day_month_year
+current_time = time.strftime("%H_%M_%d_%m_%Y")
+
+# Create the file name using the current time
+file_name = f"url_{current_time}.json"
+
+if not os.path.exists("urls"):
+    os.makedirs("urls")
+
+# Save the indie game URLs to the dynamically named file in the /data folder
+file_path = os.path.join("urls", file_name)
 # Save URLs to a file
-with open("indie_game_urls.json", "w") as f:
+with open(file_path, "w") as f:
     json.dump(indie_game_urls, f, indent=2)
 
 print(f"Total indie game URLs scraped: {len(indie_game_urls)}")
