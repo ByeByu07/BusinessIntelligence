@@ -59,7 +59,7 @@ def create_filtered_pie_chart(df):
 
 if __name__ == "__main__":
     # Path to your CSV file
-    csv_file_path = 'garment.csv'  # Replace with the path to your CSV file
+    csv_file_path = 'transformed_data.csv'  # Replace with the path to your CSV file
     
     # Load data
     df = load_data(csv_file_path)
