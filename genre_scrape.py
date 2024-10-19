@@ -46,6 +46,7 @@ def get_indie_games_urls(num_pages=1):
                     if any(tag['description'] == 'Indie' for tag in tags):
                         game_url = f"https://store.steampowered.com/app/{app_id}/"
                         all_game_urls.append(game_url)
+                        print(tags)
                         print(f"Added Indie game: {game_url}")
         else:
             print(f"Failed to fetch page {page + 1}")

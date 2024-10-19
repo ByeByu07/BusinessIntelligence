@@ -32,6 +32,6 @@ def process_game_urls(input_file, output_file):
     print(f"Scraped data for {len(all_game_data)} games. Data saved to {output_file}")
 
 # Process the games
-input_file = "indie_game_urls.json"
+input_file = "urls/url_19_00_19_10_24.json"
 output_file = "indie_games_data.json"
 process_game_urls(input_file, output_file)
