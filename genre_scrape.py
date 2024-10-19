@@ -4,6 +4,8 @@ import time
 
 def get_indie_games_urls(num_pages=1):
     base_url = "https://store.steampowered.com/saleaction/ajaxgetsaledynamicappquery"
+    app_details_url = "https://store.steampowered.com/api/appdetails"
+    
     params = {
         "cc": "ID",
         "l": "indonesian",
@@ -27,13 +29,24 @@ def get_indie_games_urls(num_pages=1):
 
     for page in range(num_pages):
         params["start"] = page * 50
-        response = requests.get(base_url, params=params, headers=headers)
+        response = requests.get(base_url, params=params, headers=headers, timeout=10)  # 10 seconds timeout
+
         
         if response.status_code == 200:
             data = response.json()
-            game_urls = [f"https://store.steampowered.com/app/{app_id}/" for app_id in data.get("appids", [])]
-            all_game_urls.extend(game_urls)
-            print(f"Scraped page {page + 1}, total games: {len(all_game_urls)}")
+            app_ids = data.get("appids", [])
+            
+            for app_id in app_ids:
+                # Check the game's details for the "Indie" tag
+                detail_response = requests.get(app_details_url, params={"appids": app_id})
+                if detail_response.status_code == 200:
+                    details = detail_response.json().get(str(app_id), {}).get("data", {})
+                    tags = details.get("genres", [])
+                    
+                    if any(tag['description'] == 'Indie' for tag in tags):
+                        game_url = f"https://store.steampowered.com/app/{app_id}/"
+                        all_game_urls.append(game_url)
+                        print(f"Added Indie game: {game_url}")
         else:
             print(f"Failed to fetch page {page + 1}")
         
