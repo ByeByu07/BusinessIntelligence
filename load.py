@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 from supabase_config import supabase
 
 def load(df: pd.DataFrame, table_name: str, save_option: str):
@@ -15,13 +16,18 @@ def load(df: pd.DataFrame, table_name: str, save_option: str):
                 print(f"Inserted row {index} successfully")
             else:
                 print(f"Failed to insert row {index}. Error: {response.json()}")
-    
+
     elif save_option == 'csv':
+        # Serialize any columns that might contain JSON data
+        for col in df.columns:
+            if df[col].apply(lambda x: isinstance(x, (dict, list))).any():
+                df[col] = df[col].apply(json.dumps)
+
         # Save DataFrame to CSV
         csv_file_path = f"{table_name}.csv"  # You can modify the filename if needed
         df.to_csv(csv_file_path, index=False)
         print(f"DataFrame saved to {csv_file_path}")
-    
+
     else:
         print("Invalid save option. Please use 'api' or 'csv'.")
 

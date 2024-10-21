@@ -42,7 +42,7 @@ def clean_and_parse_data(df):
     # Parse the 'recent_reviews' and 'all_reviews' columns from JSON-like strings
     for col in ['recent_reviews', 'all_reviews']:
         if col in df.columns:
-            df[col] = df[col].apply(lambda x: json.loads(x.replace("'", '"')) if isinstance(x, str) else {})
+            # df[col] = df[col].apply(lambda x: json.loads(x.replace("'", '"')) if isinstance(x, str) else {})
             # Extract 'summary' and 'count' from the reviews
             df[f'{col}_summary'] = df[col].apply(lambda x: x.get('summary', '') if isinstance(x, dict) else '')
             df[f'{col}_count'] = df[col].apply(lambda x: int(re.sub(r'[^\d]', '', x.get('count', '0'))) if isinstance(x, dict) else 0)
@@ -88,14 +88,14 @@ def preprocess_data(data):
     df['price'] = df['price'].apply(clean_price)
 
     # Clean and parse complex data
-    # df = clean_and_parse_data(df)
+    df = clean_and_parse_data(df)
 
     # Handle categorical features (developer, publisher, tags, recent_reviews_summary, all_reviews_summary)
     df['tags'] = df['tags'].fillna('').apply(lambda x: ','.join(sorted(set(x))) if isinstance(x, list) else '')
     print(df['tags'])
     # One-hot encode the categorical columns
-    # df = pd.get_dummies(df, columns=['developer', 'publisher', 'tags', 'recent_reviews_summary', 'all_reviews_summary'], drop_first=True)
-    df = pd.get_dummies(df, columns=['developer', 'publisher', 'tags'], drop_first=True)
+    df = pd.get_dummies(df, columns=['developer', 'publisher', 'tags', 'recent_reviews_summary', 'all_reviews_summary'], drop_first=True)
+    # df = pd.get_dummies(df, columns=['developer', 'publisher', 'tags'], drop_first=True)
     
     # Drop irrelevant columns (e.g., title, description, recent_reviews, all_reviews)
     df = df.drop(columns=['title', 'description', 'recent_reviews', 'all_reviews','release_date'], errors='ignore')
@@ -130,7 +130,8 @@ def train_random_forest(df):
 def main():
     # Fetch the data from Supabase
     data = fetch_data_from_supabase()
-    
+    print(data)
+    return
     # Preprocess the data
     if data:
         df = preprocess_data(data)
