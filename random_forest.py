@@ -130,8 +130,7 @@ def train_random_forest(df):
 def main():
     # Fetch the data from Supabase
     data = fetch_data_from_supabase()
-    print(data)
-    return
+    
     # Preprocess the data
     if data:
         df = preprocess_data(data)
