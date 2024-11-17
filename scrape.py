@@ -80,20 +80,39 @@ def scrape_steam_game(url):
           # Recent reviews
           recent_reviews = user_reviews_div.find('div', class_='user_reviews_summary_row', attrs={'onclick': "window.location='#app_reviews_hash'"})
           if recent_reviews:
-              game_data['recent_reviews'] = {
-                  'summary': recent_reviews.find('span', class_='game_review_summary').text.strip(),
-                  'count': clean_number(recent_reviews.find('span', class_='responsive_hidden').text),
-                  'info': recent_reviews.find('span', class_='responsive_reviewdesc').text.strip()
-              }
+              # game_data['recent_reviews'] = {
+              #     'summary': recent_reviews.find('span', class_='game_review_summary').text.strip(),
+              #     'count': clean_number(recent_reviews.find('span', class_='responsive_hidden').text),
+              #     'info': recent_reviews.find('span', class_='responsive_reviewdesc').text.strip()
+              # }
+              game_data['recent_reviews_count'] = clean_number(recent_reviews.find('span', class_='responsive_hidden').text)
+              game_data['recent_reviews_info'] = recent_reviews.find('span', class_='responsive_reviewdesc').text.strip()
+              # Extract percentage from reviews info
+              try:
+                  percentage_match = re.search(r'(\d+)%', game_data['recent_reviews_info'])
+                  game_data['recent_reviews_percentage'] = int(percentage_match.group(1)) if percentage_match else None
+              except:
+                  game_data['recent_reviews_percentage'] = None
+              game_data['recent_reviews_summary'] = recent_reviews.find('span', class_='game_review_summary').text.strip()
           
           # All reviews
           all_reviews = user_reviews_div.find_all('div', class_='user_reviews_summary_row')[-1]
           if all_reviews:
-              game_data['all_reviews'] = {
-                  'summary': all_reviews.find('span', class_='game_review_summary').text.strip(),
-                  'count': clean_number(all_reviews.find('span', class_='responsive_hidden').text),
-                  'info': all_reviews.find('span', class_='responsive_reviewdesc').text.strip()
-              }
+              # game_data['all_reviews'] = {
+              #     'summary': all_reviews.find('span', class_='game_review_summary').text.strip(),
+              #     'count': clean_number(all_reviews.find('span', class_='responsive_hidden').text),
+              #     'info': all_reviews.find('span', class_='responsive_reviewdesc').text.strip()
+              # }
+              game_data['all_reviews_count'] = clean_number(all_reviews.find('span', class_='responsive_hidden').text)
+              game_data['all_reviews_info'] = all_reviews.find('span', class_='responsive_reviewdesc').text.strip()
+
+              try:
+                  percentage_match = re.search(r'(\d+)%', game_data['all_reviews_info'])
+                  game_data['all_reviews_percentage'] = int(percentage_match.group(1)) if percentage_match else None
+              except:
+                  game_data['all_reviews_percentage'] = None
+
+              game_data['all_reviews_summary'] = all_reviews.find('span', class_='game_review_summary').text.strip()
       else:
           game_data['recent_reviews'] = "N/A"
           game_data['all_reviews'] = "N/A"

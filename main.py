@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 
 def main():
     # Define the path to your JSON file
-    path_to_json = "datas/data_20_17_20_10_2024.json"  # Update this path
+    path_to_json = "datas\data_08_34_16_11_2024.json"  # Update this path
     unique_field = "title"  # The field you consider as unique
 
     # Transform the data
@@ -39,7 +39,7 @@ def main():
         # Load the transformed data into Supabase
 
         # sample_data = df.head(10)  # Take a sample of 10 rows
-        load(df, "steam", 'api')
+        load(df, "steam", 'csv')
 
         # load(df, "steam","api")  # Replace 'your_table_name' with the target table name in Supabase
     else:

@@ -53,7 +53,8 @@ def clean_and_parse_data(df):
 def safe_parse_tags(tag_str):
     try:
         # Replace single quotes with double quotes and parse as JSON
-        return json.loads(tag_str.replace("'", '"'))
+        # return json.loads(tag_str.replace("'", '"'))
+        return json.loads(tag_str)
     except json.JSONDecodeError as e:
         # Log or print the error and the problematic string
         print(f"Error parsing tags: {tag_str}, error: {e}")
@@ -117,6 +118,7 @@ def train_random_forest(df):
     # Train the model
     rf.fit(X_train, y_train)
     
+    print(X_test)
     # Make predictions
     y_pred = rf.predict(X_test)
     
